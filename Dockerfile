@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-# Install apache, PHP, and supplimentary programs. openssh-server, curl, and lynx-cur are for debugging the container.
+# Install apache, PHP, and supplimentary programs. openssh-server, curl, wget, and lynx-cur etc.
 RUN  apt-get update \
   && apt-get install -y wget
 RUN apt-get install -y software-properties-common
@@ -11,7 +11,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     # Install apache
     apache2 \
 	software-properties-common \
-    # Install php 7.2
+    # Install php 7.2 and modules
     libapache2-mod-php7.2 \
 	php7.2 \
 	php7.2-common \
@@ -32,7 +32,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
 # Enable apache mods.
 RUN a2enmod php7.2
 RUN a2enmod rewrite
-
 RUN service apache2 restart
 
 # Update the PHP.ini file, enable <? ?> tags and quieten logging.
@@ -49,20 +48,24 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 # Expose apache.
 EXPOSE 80
 
-# Copy this repo into place.
+# Copy the repo into place.
 RUN wget -q http://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz -P /tmp 
 RUN mkdir -p /var/www/html/dokuwiki 
 RUN tar -xzf /tmp/dokuwiki-stable.tgz -C /var/www/html/dokuwiki --strip-components 1
+
+# Change the ownership and the permissions
 RUN chown -R www-data:www-data /var/www/html/dokuwiki/
 RUN chmod -R 755 /var/www/html/dokuwiki
 
 # Update the default apache site with the config we created.
 ADD dokuwiki.conf /etc/apache2/sites-available/
 
+# Enable apache changes.
 RUN a2ensite dokuwiki.conf
 RUN a2enmod rewrite
 RUN service apache2 restart
 
+# Disable default apache config file.
 RUN a2dissite 000-default.conf
 RUN a2enmod rewrite
 RUN service apache2 restart
