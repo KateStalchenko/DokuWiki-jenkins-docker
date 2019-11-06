@@ -6,7 +6,7 @@ pipeline {
         registry = 'dockerkatya/project'
     }
     parameters {
-        string(name: 'repository_url', defaultValue: 'git@github.com:KateStalchenko/DokuWiki-jenkins-docker.git', description: 'Github repository url')
+        string(name: 'repository_url', defaultValue: 'https://github.com/KateStalchenko/DokuWiki-jenkins-docker.git', description: 'Github repository url')
         booleanParam(name: 'build_and_run_docker', defaultValue: true, description: 'Deploy and run docker')
     	booleanParam(name: 'remove', defaultValue: false, description: 'Remove Dokuwiki')
   }
