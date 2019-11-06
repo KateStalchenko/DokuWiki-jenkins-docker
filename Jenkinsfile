@@ -15,7 +15,7 @@ pipeline {
 	    when {
 	     expression {params.build_and_run_docker == true}
 	    }  
-	      stages {
+	    stages {
           stage('Clone Git') {
             steps {
               git url: "${params.repository_url}"
@@ -30,8 +30,8 @@ pipeline {
           }	          
           stage('Run docker image'){
             steps {
-              sh "echo $registry:$BUILD_NUMBER"
-              sh "docker run -d  -p 4000:80 --name dokuwiki $registry:$BUILD_NUMBER"
+              bat "echo $registry:$BUILD_NUMBER"
+              bat "docker run -d  -p 80:80 --name dokuwiki $registry:$BUILD_NUMBER"
             }
           }  
 	    }
@@ -43,13 +43,13 @@ pipeline {
         stages {
 		  stage('Stop and delete docker container') {
 		    steps {
-                sh "docker container stop dokuwiki"
-			    sh "docker container prune -f"
+                bat "docker container stop dokuwiki"
+			    bat "docker container prune -f"
 	        }
 		  }
           stage('Remove docker image') {
             steps{
-              sh "docker system prune -af"
+              bat "docker system prune -af"
             }
           }
         }
