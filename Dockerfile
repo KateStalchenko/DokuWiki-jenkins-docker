@@ -48,7 +48,7 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 # Expose apache.
 EXPOSE 80
 
-# Copy the repo into place.
+# Download the repo into place.
 RUN wget -q http://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz -P /tmp 
 RUN mkdir -p /var/www/html/dokuwiki 
 RUN tar -xzf /tmp/dokuwiki-stable.tgz -C /var/www/html/dokuwiki --strip-components 1
