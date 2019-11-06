@@ -18,8 +18,7 @@ pipeline {
 	      stages {
           stage('Clone Git') {
             steps {
-              git url: "${params.repository_url}",
-              credentialsId: '096853c3-033d-476e-9042-9faf779176a7'
+              git url: "${params.repository_url}"
             }
           }
           stage('Build image') {
